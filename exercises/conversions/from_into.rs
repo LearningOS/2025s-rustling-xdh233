@@ -49,8 +49,8 @@ impl From<&str> for Person {
         let result:Vec<&str>=s.split(',').collect();
 
         match (result.get(0),result.get(1).and_then(|s| s.parse().ok()),result.get(2)){
-            (Some(a_ame),Some(a_age),None) => 
-                if aName.is_empty() {
+            (Some(a_name),Some(a_age),None) => 
+                if a_name.is_empty() {
                     Person::default()
                 }else{
                     Person{
