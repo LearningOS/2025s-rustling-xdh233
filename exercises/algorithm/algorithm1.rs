@@ -2,7 +2,7 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+// I AM DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -70,12 +70,43 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+    where T:PartialOrd+Copy,
 	{
 		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+        let mut lista=list_a;
+        let mut listb=list_b;  
+        match (lista.start,listb.start){
+            (None,None) => LinkedList::<T>::new(),
+            (None,_) => lista,
+            (_,None) => listb,
+            _ => {
+                let mut ret:LinkedList<T>=LinkedList::<T>::new();
+                unsafe{
+                    while let (Some(a_node),Some(b_node))=(lista.start,listb.start){
+                        if a_node.as_ref().val<= b_node.as_ref().val{
+                            ret.add(a_node.as_ref().val);
+                            lista.start=a_node.as_ref().next;
+                        }else{
+                            ret.add(b_node.as_ref().val);
+                            listb.start=b_node.as_ref().next;
+                        }
+                    }
+                }
+                    //a has remaining nodes
+                    unsafe {
+                        while let Some(a_node) = lista.start {
+                            ret.add(a_node.as_ref().val);
+                            lista.start = a_node.as_ref().next;
+                        }
+                
+                        while let Some(b_node) = listb.start {
+                            ret.add(b_node.as_ref().val);
+                            listb.start = b_node.as_ref().next;
+                        }
+                    }
+                
+                ret
+            }
         }
 	}
 }
